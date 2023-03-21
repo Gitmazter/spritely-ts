@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { clusterApiUrl } from '@solana/web3.js';
+import { FC, ReactNode, useMemo } from 'react';
+import { Page } from './components/Page';
 
-function App() {
+require('./App.css');
+require('@solana/wallet-adapter-react-ui/styles.css');
+
+
+const App: FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Context>
+      <Content />
+    </Context>
+  )
 }
-
 export default App;
+
+
+const Context: FC<{ children: ReactNode }> = ({children}) => {
+   
+  const network = WalletAdapterNetwork.Devnet;
+
+  const endpoint = useMemo(() => clusterApiUrl(network), [network] )
+
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [network]
+  )
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>{children}</WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+};
+
+const Content: FC = () => {
+  return(
+    <div className='App'>
+      <Page/>
+    </div>
+  )
+}

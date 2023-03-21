@@ -1,0 +1,32 @@
+$header-height: 15vh;
+
+.App {
+  text-align: center;
+}
+
+#brandDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: $header-height;
+  img{
+    height: $header-height*0.66;
+    width: $header-height*0.66;
+  }
+}
+
+header {
+  height: $header-height;
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  div {
+    margin-left: $header-height/3;
+  }
+  button {
+    margin-right: $header-height/3;
+  }
+}
